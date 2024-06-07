@@ -1,1 +1,3 @@
+- "!include public_abstracts.yaml"
+- "!include public_reviews.yaml"
 - "!include public_users.yaml"
