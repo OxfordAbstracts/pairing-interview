@@ -23,6 +23,20 @@ app.get("/healthcheck", async (_req, res) => {
   }
 });
 
+app.post('/sign-in', async (req, res) => {
+  const { email, password } = req.body;
+
+  const users = await db.query('SELECT * FROM users');
+
+  const user = users.find(user => user.email === email && user.password === password);
+
+  if (user) {
+    res.send(user);
+  } else {
+    res.status(401).send();
+  }
+});
+
 app.listen(port, () => {
   console.log(`Server listening on port ${port}`);
 });

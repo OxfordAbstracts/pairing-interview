@@ -29,7 +29,7 @@ function Home() {
       </header>
       <main className="container mx-auto px-4 py-8">
         <h1 className="text-4xl font-bold text-gray-800">
-          Welcome to My Website
+          Welcome to OA
         </h1>
         <p className="text-lg text-gray-600 mt-4">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam

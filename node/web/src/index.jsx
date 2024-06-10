@@ -7,12 +7,17 @@ import {
   Link,
 } from "react-router-dom";
 import Home from "./pages/home";
-import './index.css';
+import "./index.css";
+import SignIn from "./pages/sign-in";
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: Home(),
+  },
+  {
+    path: "sign-in",
+    element: SignIn(),
   },
   {
     path: "about",
