@@ -98,12 +98,16 @@ workspace:
     web:
       path: web
       dependencies:
+        - affjax
+        - affjax-web
         - argonaut
+        - codec-argonaut
         - console
         - debug
         - effect
         - fetch
         - halogen
+        - halogen-formless
         - halogen-store
         - prelude
         - routing
@@ -111,6 +115,8 @@ workspace:
       test_dependencies: []
       build_plan:
         - aff
+        - affjax
+        - affjax-web
         - argonaut
         - argonaut-codecs
         - argonaut-core
@@ -121,10 +127,13 @@ workspace:
         - avar
         - bifunctors
         - catenable-lists
+        - codec
+        - codec-argonaut
         - console
         - const
         - contravariant
         - control
+        - convertable-options
         - datetime
         - debug
         - distributive
@@ -139,16 +148,19 @@ workspace:
         - foreign
         - foreign-object
         - fork
+        - form-urlencoded
         - free
         - freeap
         - functions
         - functors
         - gen
         - halogen
+        - halogen-formless
         - halogen-hooks
         - halogen-store
         - halogen-subscriptions
         - halogen-vdom
+        - heterogeneous
         - http-methods
         - identity
         - integers
@@ -194,6 +206,7 @@ workspace:
         - unsafe-coerce
         - unsafe-reference
         - validation
+        - variant
         - web-clipboard
         - web-dom
         - web-events
@@ -204,6 +217,7 @@ workspace:
         - web-streams
         - web-touchevents
         - web-uievents
+        - web-xhr
   package_set:
     address:
       registry: 51.1.0
@@ -722,6 +736,33 @@ packages:
       - tailrec
       - transformers
       - unsafe-coerce
+  affjax:
+    type: registry
+    version: 13.0.0
+    integrity: sha256-blYfaoW4FYIrIdvmT4sB7nN7BathFaEfZuiVLPmHJOo=
+    dependencies:
+      - aff
+      - argonaut-core
+      - arraybuffer-types
+      - foreign
+      - form-urlencoded
+      - http-methods
+      - integers
+      - media-types
+      - nullable
+      - refs
+      - unsafe-coerce
+      - web-xhr
+  affjax-web:
+    type: registry
+    version: 1.0.0
+    integrity: sha256-n/yJUk1wMxMN7fJ2TJ+fELgieomy29N617yOshAnrc0=
+    dependencies:
+      - aff
+      - affjax
+      - either
+      - maybe
+      - prelude
   argonaut:
     type: registry
     version: 9.0.0
@@ -835,6 +876,24 @@ packages:
       - prelude
       - tuples
       - unfoldable
+  codec:
+    type: registry
+    version: 6.1.0
+    integrity: sha256-6vMLNlsJxQarVQ9cn1FYfl5x6opfzxAza15SzRdxFxQ=
+    dependencies:
+      - bifunctors
+      - profunctor
+  codec-argonaut:
+    type: registry
+    version: 10.0.0
+    integrity: sha256-n80U8KiBk333qfQwDobSZWiyNg9BA3CL/EwFznIdRwI=
+    dependencies:
+      - argonaut-core
+      - codec
+      - foreign-object
+      - ordered-collections
+      - type-equality
+      - variant
   console:
     type: registry
     version: 6.1.0
@@ -867,6 +926,15 @@ packages:
     dependencies:
       - newtype
       - prelude
+  convertable-options:
+    type: registry
+    version: 1.0.0
+    integrity: sha256-IFsYp0rXyzUtjoi3jed6yFYAVM+NhfgSn2j/zkjpccM=
+    dependencies:
+      - console
+      - effect
+      - maybe
+      - record
   datetime:
     type: registry
     version: 6.1.0
@@ -1037,6 +1105,18 @@ packages:
     integrity: sha256-X7u0SuCvFbLbzuNEKLBNuWjmcroqMqit4xEzpQwAP7E=
     dependencies:
       - aff
+  form-urlencoded:
+    type: registry
+    version: 7.0.0
+    integrity: sha256-WUzk8DTjrbPVHKZ5w7XpPBO6ci6xFhvYguHp6RvX+18=
+    dependencies:
+      - foldable-traversable
+      - js-uri
+      - maybe
+      - newtype
+      - prelude
+      - strings
+      - tuples
   free:
     type: registry
     version: 7.1.0
@@ -1130,6 +1210,28 @@ packages:
       - unsafe-coerce
       - unsafe-reference
       - web-file
+      - web-uievents
+  halogen-formless:
+    type: registry
+    version: 4.0.3
+    integrity: sha256-HqNk/2CT01NPn1HVzAHCsnJ0K56tgtoBcVvKpRww5jo=
+    dependencies:
+      - convertable-options
+      - effect
+      - either
+      - foldable-traversable
+      - foreign-object
+      - halogen
+      - heterogeneous
+      - maybe
+      - prelude
+      - record
+      - safe-coerce
+      - type-equality
+      - unsafe-coerce
+      - unsafe-reference
+      - variant
+      - web-events
       - web-uievents
   halogen-hooks:
     type: registry
@@ -2072,6 +2174,17 @@ packages:
     version: 5.0.0
     integrity: sha256-5I+ut9JYno3wowti3vJGs1afKCm1ucppKuy+zhuSyss=
     dependencies:
+      - web-html
+  web-xhr:
+    type: registry
+    version: 5.0.1
+    integrity: sha256-3dbIPVG66S+hPrgEVnpD78hrGjE7qlBbsReWOz89Ios=
+    dependencies:
+      - arraybuffer-types
+      - datetime
+      - http-methods
+      - web-dom
+      - web-file
       - web-html
   yoga-postgres:
     type: registry

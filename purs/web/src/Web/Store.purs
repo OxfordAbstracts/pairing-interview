@@ -1,9 +1,6 @@
 module Web.Store where
 
-
 import Data.Maybe (Maybe(..))
-
-
 
 type Store =
   { currentUser :: Maybe Profile

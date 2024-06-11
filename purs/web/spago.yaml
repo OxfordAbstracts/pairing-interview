@@ -1,12 +1,16 @@
 package:
   name: web
   dependencies:
+    - affjax
+    - affjax-web
     - argonaut
+    - codec-argonaut
     - console
     - debug
     - effect
     - fetch
     - halogen
+    - halogen-formless
     - halogen-store
     - prelude
     - routing

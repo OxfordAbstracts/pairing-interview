@@ -1,12 +1,9 @@
 module Web.Route where
 
-import Prelude
-
 import Prelude hiding ((/))
 
-import Data.Either (note)
 import Data.Generic.Rep (class Generic)
-import Routing.Duplex (RouteDuplex', as, root, segment)
+import Routing.Duplex (RouteDuplex', root)
 import Routing.Duplex.Generic (noArgs, sum)
 import Routing.Duplex.Generic.Syntax ((/))
 
