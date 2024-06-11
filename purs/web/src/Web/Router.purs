@@ -76,38 +76,7 @@ component = connect (selectEq _.currentUser) $ H.mkComponent
           _ -> pure unit
       pure (Just a)
 
-  -- Display the SignIn page instead of the expected page if there is no current user; a simple
-  -- way to restrict access.
-  authorize :: Maybe Profile -> H.ComponentHTML Action _ m -> H.ComponentHTML Action _ m
-  authorize mbProfile html = case mbProfile of
-    Nothing ->
-      HH.slot (Proxy :: _ "SignIn") unit SignIn.component { redirect: false } absurd
-    Just _ ->
-      html
-
   render :: State -> H.ComponentHTML Action _ m
   render { route, currentUser } = case currentUser of
     Nothing -> HH.slot (Proxy :: _ "SignIn") unit SignIn.component { redirect: false } absurd
-    _ -> HH.div_ [ HH.text "Oh no! That page wasn't found." ]
---  case route of
--- -- Just r -> case r of
--- -- Home ->
--- --   HH.slot_ (Proxy :: _ "home") unit Home.component unit
--- -- SignIn ->
--- --   HH.slot_ (Proxy :: _ "SignIn") unit SignIn.component { redirect: true }
--- -- Register ->
--- --   HH.slot_ (Proxy :: _ "register") unit Register.component unit
--- -- Settings -> authorize currentUser do
--- --   HH.slot_ (Proxy :: _ "settings") unit Settings.component unit
--- -- Editor -> authorize currentUser do
--- --   HH.slot_ (Proxy :: _ "editor") unit Editor.component Nothing
--- -- EditArticle slug -> authorize currentUser do
--- --   HH.slot_ (Proxy :: _ "editor") unit Editor.component (Just slug)
--- -- ViewArticle slug ->
--- --   HH.slot_ (Proxy :: _ "viewArticle") unit ViewArticle.component slug
--- -- Profile username ->
--- --   HH.slot_ (Proxy :: _ "profile") unit Profile.component { username, tab: ArticlesTab }
--- -- Favorites username ->
--- --   HH.slot_ (Proxy :: _ "profile") unit Profile.component { username, tab: FavoritesTab }
--- _ ->
---   HH.slot_ ()
+    Just user -> HH.div_ [ HH.text $ "signed in as: " <> show user ]

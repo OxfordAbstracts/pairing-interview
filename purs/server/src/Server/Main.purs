@@ -6,23 +6,28 @@ import Control.Monad.Cont (ContT, lift)
 import Data.Argonaut (class DecodeJson, class EncodeJson, decodeJson, encodeJson, parseJson, stringify)
 import Data.Array (head)
 import Data.DateTime.Instant (unInstant)
+import Data.Either (hush)
 import Data.Maybe (Maybe(..))
 import Data.Newtype (unwrap)
+import Data.String (Pattern(..), joinWith, stripPrefix)
 import Data.Tuple.Nested ((/\))
 import Effect.Aff (Aff)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Now as Date
-import HTTPurple (class Generic, JsonDecoder(..), Method(..), Response, RouteDuplex', ServerM, fromJson, jsonHeaders, mkRoute, noArgs, notFound, ok', serve, unauthorized, usingCont, (/))
+import HTTPurple (class Generic, JsonDecoder(..), Method(..), Middleware, RequestR, Response, RouteDuplex', ServerM, fromJson, jsonHeaders, lookup, mkRoute, noArgs, notFound, ok, ok', serve, unauthorized, usingCont, (/))
 import HTTPurple as HTTPure
 import HTTPurple.Body (RequestBody)
 import Node.Process as Process
-import Server.JWT (sign)
+import Prim.Row (class Nub, class Union)
+import Record (merge)
+import Server.JWT (sign, verify)
 import Server.Query (getUsersWithEmail)
 
 data Route
   = Healthcheck
   | SignIn
+  | CurrentUser
 
 derive instance Generic Route _
 
@@ -30,11 +35,12 @@ route :: RouteDuplex' Route
 route = mkRoute
   { "Healthcheck": "healthcheck" / noArgs
   , "SignIn": "sign-in" / noArgs
+  , "CurrentUser": "current-user" / noArgs
   }
 
 main :: ServerM
 main =
-  serve { port: 8123 } { route, router: router >>> map addCorsHeaders }
+  serve { port: 8123 } { route, router: authenticator router >>> map addCorsHeaders }
   where
   router = case _ of
     { method: Options } -> do
@@ -47,27 +53,31 @@ main =
     { route: SignIn, method: Post, body } -> usingCont do
       { password, email } :: { password :: String, email :: String } <- decodeBody body
       users <- lift $ getUsersWithEmail email
-
       case head users of
-        Just user@{ id } | password == user.password -> do
+        Just foundUser@{ id, first_name, last_name } | password == foundUser.password -> do
           let
-            creds =
+            user =
               { email
               , id
+              , first_name
+              , last_name
               , "X-Hasura-User-Id": show id
               }
-          token <- sign creds
+          token <- sign user
           let
             headers = HTTPure.headers
               { "Content-Type": "application/json"
               , "Set-Cookie": "token=" <> token
               }
-          ok' headers $ toJson creds
+          ok' headers $ toJson { token, user }
         _ -> unauthorized
 
-    req -> do 
-     log $ "not found: " <> show req.path
-     notFound
+    { route: CurrentUser, method: Get, user } -> usingCont do
+      ok $ stringify $ encodeJson user
+
+    req -> do
+      log $ "not found: " <> joinWith "/" req.path
+      notFound
 
   addCorsHeaders res@{ headers } =
     res { headers = headers <> corsHeaders }
@@ -77,7 +87,22 @@ main =
       [ "Access-Control-Allow-Origin" /\ "http://localhost:3000"
       , "Access-Control-Allow-Credentials" /\ "true"
       , "Access-Control-Allow-Methods" /\ "GET,POST,OPTIONS"
+      , "Access-Control-Allow-Headers" /\ "Content-Type,Authorization"
       ]
+
+authenticator
+  :: forall route extIn extOut
+   . Nub (RequestR route extOut) (RequestR route extOut)
+  => Union extIn (user :: Maybe User) extOut
+  => Middleware route extIn extOut
+authenticator router request@{ headers } =
+  case lookup headers "Token" >>= stripPrefix (Pattern "Bearer ") of
+    Just token -> do
+      verified :: _ _ User <- verify token
+      router $ merge request { user: hush verified }
+    _ -> router $ merge request { user: Nothing :: Maybe User }
+
+type User = { email :: String, id :: String, first_name :: String, last_name :: String }
 
 jsonOk :: forall a. EncodeJson a => a -> Aff Response
 jsonOk = ok' jsonHeaders <<< toJson

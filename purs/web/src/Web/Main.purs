@@ -11,6 +11,8 @@ import Halogen.Aff as HA
 import Halogen.VDom.Driver (runUI)
 import Routing.Duplex (parse)
 import Routing.Hash (matchesWith)
+import Web.API (getCurrentUser)
+import Web.API as API
 import Web.AppM (runAppM)
 import Web.Route (routeCodec)
 import Web.Router as Router
@@ -24,22 +26,8 @@ main = HA.runHalogenAff do
   currentUser :: Maybe Profile <- (liftEffect readToken) >>= case _ of
     Nothing ->
       pure Nothing
+    Just _token -> getCurrentUser
 
-    Just token -> pure Nothing
-  -- do
-  --   let requestOptions = { endpoint: User, method: Get }
-  --   res <- request $ defaultRequest baseUrl (Just token) requestOptions
-
-  --   let
-  --     user :: Either String Profile
-  --     user = case res of
-  --       Left e ->
-  --         Left (printError e)
-  --       Right v -> lmap printJsonDecodeError do
-  --         u <- Codec.decode (CAR.object "User" { user: CA.json }) v.body
-  --         CA.decode Profile.profileCodec u.user
-
-  --   pure $ hush user
   let
     initialStore :: Store
     initialStore = { currentUser }
