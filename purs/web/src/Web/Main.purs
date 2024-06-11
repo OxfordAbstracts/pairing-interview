@@ -3,6 +3,7 @@ module Web.Main where
 import Prelude
 
 import Data.Maybe (Maybe(..))
+import Debug (traceM)
 import Effect (Effect)
 import Effect.Aff (launchAff_)
 import Halogen (liftEffect)
@@ -26,14 +27,17 @@ main = HA.runHalogenAff do
   currentUser :: Maybe Profile <- (liftEffect readToken) >>= case _ of
     Nothing ->
       pure Nothing
-    Just _token -> getCurrentUser
-
+    Just _token -> do
+      traceM { _token }
+      getCurrentUser
+  traceM { currentUser }
   let
     initialStore :: Store
     initialStore = { currentUser }
   rootComponent <- runAppM initialStore Router.component
   halogenIO <- runUI rootComponent unit body
-  void $ liftEffect $ matchesWith (parse routeCodec) \old new ->
+  void $ liftEffect $ matchesWith (parse routeCodec) \old new -> do
+    traceM { old, new, changed: old /= Just new }
     when (old /= Just new) $ launchAff_ do
       _response <- halogenIO.query $ H.mkTell $ Router.Navigate new
       pure unit

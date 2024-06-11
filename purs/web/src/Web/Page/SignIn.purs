@@ -5,6 +5,7 @@ import Prelude
 import Control.Monad.Error.Class (class MonadError, try)
 import Data.Either (Either(..))
 import Data.Maybe (Maybe(..))
+import Debug (traceM)
 import Effect.Aff.Class (class MonadAff)
 import Effect.Class.Console (errorShow)
 import Effect.Exception (Error)
@@ -14,6 +15,7 @@ import Halogen as H
 import Halogen.HTML as HH
 import Halogen.HTML.Events as HE
 import Halogen.HTML.Properties as HP
+import Halogen.Store.Monad (class MonadStore, updateStore)
 import Web.API as API
 import Web.Capability.Navigate (class Navigate, navigate)
 import Web.Form.Field as Field
@@ -22,6 +24,7 @@ import Web.Form.Validation as V
 import Web.HTML.Utils (css, whenElem)
 import Web.Route (Route(..))
 import Web.Store (Profile)
+import Web.Store as Store
 import Web.Token (writeToken)
 
 type Input = { redirect :: Boolean }
@@ -48,6 +51,7 @@ component
   :: forall query output m
    . MonadAff m
   => MonadError Error m
+  => MonadStore Store.Action Store.Store m
   => Navigate m
   -- => ManageUser m
   => H.Component query Input output m
@@ -74,7 +78,9 @@ component = F.formless { liftAction: Eval } mempty $ H.mkComponent
       onSubmit = signInUser >=> case _ of
         Nothing ->
           H.modify_ _ { loginError = true }
-        Just _ -> do
+        Just signedIn -> do
+          traceM { signedIn }
+          -- updateStore $ Store.LoginUser signedIn
           H.modify_ _ { loginError = false }
           { redirect } <- H.gets _.form.input
           when redirect (navigate Home)
@@ -137,4 +143,5 @@ component = F.formless { liftAction: Eval } mempty $ H.mkComponent
         pure Nothing
       Right res -> do
         liftEffect $ writeToken res.token
+        updateStore $ Store.LoginUser res.user
         pure $ Just res.user

@@ -11,7 +11,8 @@ import Data.Maybe (Maybe(..))
 import Data.Newtype (unwrap)
 import Data.String (Pattern(..), joinWith, stripPrefix)
 import Data.Tuple.Nested ((/\))
-import Effect.Aff (Aff)
+import Debug (spy, traceM)
+import Effect.Aff (Aff, try)
 import Effect.Class (liftEffect)
 import Effect.Class.Console (log)
 import Effect.Now as Date
@@ -96,10 +97,11 @@ authenticator
   => Union extIn (user :: Maybe User) extOut
   => Middleware route extIn extOut
 authenticator router request@{ headers } =
-  case lookup headers "Token" >>= stripPrefix (Pattern "Bearer ") of
+  case lookup headers "Authorization" >>= stripPrefix (Pattern "Bearer ") of
     Just token -> do
-      verified :: _ _ User <- verify token
-      router $ merge request { user: hush verified }
+      verified :: _ (_ _ User) <- try $ verify token
+      traceM { verified }
+      router $ merge request { user: hush =<< hush verified }
     _ -> router $ merge request { user: Nothing :: Maybe User }
 
 type User = { email :: String, id :: String, first_name :: String, last_name :: String }
