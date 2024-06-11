@@ -4,6 +4,7 @@ package:
     - argonaut
     - console
     - effect
+    - fetch
     - halogen
     - prelude
   test:
