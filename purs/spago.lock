@@ -3,6 +3,7 @@ workspace:
     server:
       path: server
       dependencies:
+        - argonaut
         - console
         - effect
         - httpurple
@@ -11,6 +12,10 @@ workspace:
       test_dependencies: []
       build_plan:
         - aff
+        - argonaut
+        - argonaut-codecs
+        - argonaut-core
+        - argonaut-traversals
         - arraybuffer-types
         - arrays
         - assert
@@ -69,6 +74,7 @@ workspace:
         - posix-types
         - prelude
         - profunctor
+        - profunctor-lenses
         - psci-support
         - quickcheck
         - random
@@ -94,6 +100,7 @@ workspace:
       dependencies:
         - argonaut
         - console
+        - debug
         - effect
         - fetch
         - halogen
@@ -115,6 +122,7 @@ workspace:
         - contravariant
         - control
         - datetime
+        - debug
         - distributive
         - dom-indexed
         - effect

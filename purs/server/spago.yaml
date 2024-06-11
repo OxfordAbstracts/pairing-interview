@@ -1,6 +1,7 @@
 package:
   name: server
   dependencies:
+    - argonaut
     - console
     - effect
     - httpurple

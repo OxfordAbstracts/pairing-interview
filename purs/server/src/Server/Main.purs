@@ -8,8 +8,10 @@ import Data.Array (head)
 import Data.DateTime.Instant (unInstant)
 import Data.Maybe (Maybe(..))
 import Data.Newtype (unwrap)
+import Data.Tuple.Nested ((/\))
 import Effect.Aff (Aff)
 import Effect.Class (liftEffect)
+import Effect.Class.Console (log)
 import Effect.Now as Date
 import HTTPurple (class Generic, JsonDecoder(..), Method(..), Response, RouteDuplex', ServerM, fromJson, jsonHeaders, mkRoute, noArgs, notFound, ok', serve, unauthorized, usingCont, (/))
 import HTTPurple as HTTPure
@@ -32,9 +34,11 @@ route = mkRoute
 
 main :: ServerM
 main =
-  serve { port: 8123 } { route, router }
+  serve { port: 8123 } { route, router: router >>> map addCorsHeaders }
   where
   router = case _ of
+    { method: Options } -> do
+      ok' corsHeaders ""
     { route: Healthcheck } -> do
       uptime <- liftEffect Process.uptime
       timestamp <- getTimestamp
@@ -46,11 +50,12 @@ main =
 
       case head users of
         Just user@{ id } | password == user.password -> do
-          let creds = 
-               { email
-               , id 
-               , "X-Hasura-User-Id": show id
-               }
+          let
+            creds =
+              { email
+              , id
+              , "X-Hasura-User-Id": show id
+              }
           token <- sign creds
           let
             headers = HTTPure.headers
@@ -60,7 +65,19 @@ main =
           ok' headers $ toJson creds
         _ -> unauthorized
 
-    _ -> notFound
+    req -> do 
+     log $ "not found: " <> show req.path
+     notFound
+
+  addCorsHeaders res@{ headers } =
+    res { headers = headers <> corsHeaders }
+
+  corsHeaders =
+    HTTPure.headers
+      [ "Access-Control-Allow-Origin" /\ "http://localhost:3000"
+      , "Access-Control-Allow-Credentials" /\ "true"
+      , "Access-Control-Allow-Methods" /\ "GET,POST,OPTIONS"
+      ]
 
 jsonOk :: forall a. EncodeJson a => a -> Aff Response
 jsonOk = ok' jsonHeaders <<< toJson

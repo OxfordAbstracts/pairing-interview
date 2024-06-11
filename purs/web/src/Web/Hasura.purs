@@ -1,5 +1,6 @@
 module Web.Hasura
   ( query
+  , query'
   ) where
 
 import Prelude
@@ -8,19 +9,25 @@ import Control.Monad.Error.Class (liftEither)
 import Data.Argonaut (class DecodeJson, class EncodeJson, Json, decodeJson, encodeJson, printJsonDecodeError, stringify)
 import Data.Bifunctor (lmap)
 import Effect.Aff (Aff, error, throwError)
+import Effect.Aff.Class (class MonadAff, liftAff)
 import Fetch (Method(..), fetch)
 import Foreign (Foreign)
 import Foreign.Object (Object)
 import Unsafe.Coerce (unsafeCoerce)
 
-query :: forall a. DecodeJson a => String -> Object Json -> Aff a
+query :: forall a m. MonadAff m => DecodeJson a => String -> Object Json -> m a
 query q variables = makeGqlRequest
   { query: q
   , variables
   }
 
-makeGqlRequest :: forall res body. EncodeJson body => DecodeJson res => body -> Aff res
-makeGqlRequest body = do
+query' :: forall a m. MonadAff m => DecodeJson a => String -> m a
+query' q = makeGqlRequest
+  { query: q
+  }
+
+makeGqlRequest :: forall res body m. MonadAff m => EncodeJson body => DecodeJson res => body -> m res
+makeGqlRequest body = liftAff do
   { json, ok, statusText } <- fetch "http://localhost:9695/"
     { method: POST
     , body: stringify $ encodeJson body
