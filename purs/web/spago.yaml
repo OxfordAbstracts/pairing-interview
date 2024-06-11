@@ -1,0 +1,10 @@
+package:
+  name: web
+  dependencies:
+    - argonaut
+    - console
+    - effect
+    - prelude
+  test:
+    main: Test.Main
+    dependencies: []

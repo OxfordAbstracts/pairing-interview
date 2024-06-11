@@ -1,0 +1,11 @@
+package:
+  name: server
+  dependencies:
+    - console
+    - effect
+    - httpurple
+    - prelude
+    - yoga-postgres
+  test:
+    main: Test.Main
+    dependencies: []
