@@ -4,6 +4,7 @@ package:
     - argonaut
     - console
     - effect
+    - halogen
     - prelude
   test:
     main: Test.Main
