@@ -10,3 +10,5 @@ sign :: forall a m. MonadEffect m => EncodeJson a => a -> m String
 sign = encodeJson >>> stringify >>> signImpl >>> liftEffect
 
 foreign import signImpl :: String -> Effect String
+
+foreign import secret :: String
