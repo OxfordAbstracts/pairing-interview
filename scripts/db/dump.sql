@@ -17,6 +17,6 @@ create table abstracts (
 create table authors (
     id uuid primary key,
     user_id uuid references users(id),
-    abstract_id uuid references abstracts(id)
+    abstract_id uuid references abstracts(id),
     institution varchar(255)
 );
