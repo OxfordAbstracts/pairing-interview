@@ -26,6 +26,7 @@ const abstracts = _.range(10000).map(() => ({
   id: faker.string.uuid(),
   created_at: past(),
   title: faker.lorem.sentence(),
+  category: faker.helpers.arrayElement(['science', 'technology', 'engineering', 'mathematics']), 
   body: faker.lorem.paragraphs(),
   user_id: faker.helpers.arrayElement(users).id,
 }));
@@ -40,8 +41,8 @@ const authors = _.range(100000).map(() => ({
 
 const createTablesIfNotExistsSql = `
 create table if not exists users (
-    id uuid primary key DEFAULT gen_random_uuid(),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    id uuid primary key default gen_random_uuid(),
+    created_at timestamptz not null default NOW(),
     first_name varchar(255),
     last_name varchar(255),
     email varchar(255),
@@ -49,17 +50,17 @@ create table if not exists users (
 );
 
 create table if not exists abstracts (
-    id uuid primary key DEFAULT gen_random_uuid(),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    title varchar(255),
+    id uuid primary key default gen_random_uuid(),
+    created_at timestamptz not null default NOW(),
+    title varchar(255) not null,
     category varchar(255),
-    body text,
+    body text not null,
     user_id uuid references users(id)
 );
 
 create table if not exists authors (
-    id uuid primary key DEFAULT gen_random_uuid(),
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    id uuid primary key default gen_random_uuid(),
+    created_at timestamptz not null default NOW(),
     user_id uuid references users(id),
     abstract_id uuid references abstracts(id),
     institution varchar(255)
@@ -86,11 +87,11 @@ VALUES ${users
   .join(", ")}`;
 
 const insertAbstractsSql = `INSERT INTO abstracts
-(id, created_at, title, body, user_id)
+(id, created_at, title, category, body, user_id)
 VALUES ${abstracts
   .map(
     (abstract) =>
-      `(E'${abstract.id}', E'${abstract.created_at}', E'${abstract.title}', E'${abstract.body}', E'${abstract.user_id}')`
+      `(E'${abstract.id}', E'${abstract.created_at}', E'${abstract.title}', E'${abstract.category}', E'${abstract.body}', E'${abstract.user_id}')`
   )
   .join(", ")}`;
 
