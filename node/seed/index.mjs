@@ -3,6 +3,8 @@ import { faker } from "@faker-js/faker";
 import _ from "lodash";
 import pg from "pg";
 
+console.log('seeding DB')
+
 const pool = new pg.Pool();
 
 faker.seed(123);
@@ -34,6 +36,7 @@ const authors = _.range(100000).map(() => ({
 const createTablesIfNotExistsSql = `
 create table if not exists users (
     id uuid primary key DEFAULT gen_random_uuid(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     first_name varchar(255),
     last_name varchar(255),
     email varchar(255),
@@ -42,6 +45,7 @@ create table if not exists users (
 
 create table if not exists abstracts (
     id uuid primary key DEFAULT gen_random_uuid(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     title varchar(255),
     category varchar(255),
     body text,
@@ -50,6 +54,7 @@ create table if not exists abstracts (
 
 create table if not exists authors (
     id uuid primary key DEFAULT gen_random_uuid(),
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     user_id uuid references users(id),
     abstract_id uuid references abstracts(id),
     institution varchar(255)
@@ -96,5 +101,7 @@ VALUES ${authors
 await pool.query(insertUsersSql);
 await pool.query(insertAbstractsSql);
 await pool.query(insertAuthorsSql);
+
+console.log('DB seeded successfully')
 
 process.exit(0);
