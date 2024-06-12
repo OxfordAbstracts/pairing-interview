@@ -1,0 +1,19 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "seed": "cd seed && node index.mjs",
+    "dev:server": "cd server && pnpm run dev",
+    "dev:web": "cd web && pnpm run dev",
+    "dev": "concurrently \"pnpm run dev:server\" \"pnpm run dev:web\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

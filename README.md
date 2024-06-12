@@ -1,5 +1,17 @@
 # OA Abstract table 
 
+## Setup
+
+Before reading the rest of this, you can setup the project with the following steps: 
+
+In your terminal run `docker-compose up` to start the database.
+
+In a separate terminal, run the setup script. 
+
+If you plan to work in node/react this is `setup-node.sh`. If you plan to work in puresript this is `setup-purs.sh`.
+
+## Intro
+
 The goal of this exercise is to create a table that displays a list of abstracts.
 
 To start with, we have added a simple server and the scaffolding for a web app. 
