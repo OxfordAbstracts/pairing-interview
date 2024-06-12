@@ -5,10 +5,6 @@ import db from "./db.mjs";
 const app = express();
 const port = 3000;
 
-app.get("/", (_req, res) => {
-  res.send("Hello World!");
-});
-
 app.get("/healthcheck", async (_req, res) => {
   const healthcheck = {
     uptime: process.uptime(),
@@ -23,18 +19,14 @@ app.get("/healthcheck", async (_req, res) => {
   }
 });
 
-app.post('/sign-in', async (req, res) => {
-  const { email, password } = req.body;
+app.get("/abstracts", async (_req, res) => {
+  const abstracts = await db.query(`
+  select title, category, first_name, last_name, email
+  from abstracts
+  inner join users on abstracts.user_id = users.id 
+  limit 100`);
 
-  const users = await db.query('SELECT * FROM users');
-
-  const user = users.find(user => user.email === email && user.password === password);
-
-  if (user) {
-    res.send(user);
-  } else {
-    res.status(401).send();
-  }
+  res.json(abstracts.rows);
 });
 
 app.listen(port, () => {
