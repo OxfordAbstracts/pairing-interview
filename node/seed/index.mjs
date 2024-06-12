@@ -7,12 +7,15 @@ console.log('seeding DB')
 
 const pool = new pg.Pool();
 
-faker.seed(123);
+faker.seed(583);
 
 const removeApostrophes = (str) => str.replace(/'/g, "''");
 
+const past = () => new Date(faker.date.past()).toISOString();
+
 const users = _.range(10000).map(() => ({
   id: faker.string.uuid(),
+  created_at: past(),
   first_name: removeApostrophes(faker.person.firstName()),
   last_name: removeApostrophes(faker.person.lastName()),
   email: faker.internet.email(),
@@ -21,6 +24,7 @@ const users = _.range(10000).map(() => ({
 
 const abstracts = _.range(10000).map(() => ({
   id: faker.string.uuid(),
+  created_at: past(),
   title: faker.lorem.sentence(),
   body: faker.lorem.paragraphs(),
   user_id: faker.helpers.arrayElement(users).id,
@@ -28,6 +32,7 @@ const abstracts = _.range(10000).map(() => ({
 
 const authors = _.range(100000).map(() => ({
   id: faker.string.uuid(),
+  created_at: past(),
   user_id: faker.helpers.arrayElement(users).id,
   abstract_id: faker.helpers.arrayElement(abstracts).id,
   institution: removeApostrophes(faker.company.name()),
@@ -72,29 +77,29 @@ await pool.query(truncateTablesSql);
 
 
 const insertUsersSql = `INSERT INTO users 
-(id, first_name, last_name, email, password) 
+(id, created_at, first_name, last_name, email, password) 
 VALUES ${users
   .map(
     (user) =>
-      `(E'${user.id}',E'${user.first_name}', E'${user.last_name}', E'${user.email}', E'${user.password}')`
+      `(E'${user.id}', E'${user.created_at}', E'${user.first_name}', E'${user.last_name}', E'${user.email}', E'${user.password}')`
   )
   .join(", ")}`;
 
 const insertAbstractsSql = `INSERT INTO abstracts
-(id, title, body, user_id)
+(id, created_at, title, body, user_id)
 VALUES ${abstracts
   .map(
     (abstract) =>
-      `(E'${abstract.id}', E'${abstract.title}', E'${abstract.body}', E'${abstract.user_id}')`
+      `(E'${abstract.id}', E'${abstract.created_at}', E'${abstract.title}', E'${abstract.body}', E'${abstract.user_id}')`
   )
   .join(", ")}`;
 
 const insertAuthorsSql = `INSERT INTO authors
-(id, user_id, abstract_id, institution)
+(id, created_at, user_id, abstract_id, institution)
 VALUES ${authors
   .map(
     (author) =>
-      `(E'${author.id}', E'${author.user_id}', E'${author.abstract_id}', E'${author.institution}')`
+      `(E'${author.id}', E'${author.created_at}', E'${author.user_id}', E'${author.abstract_id}', E'${author.institution}')`
   )
   .join(", ")}`;
 
