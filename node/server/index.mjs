@@ -25,8 +25,7 @@ app.get("/abstracts", async (_req, res) => {
   const abstracts = await db.query(`
   select title, category, first_name, last_name, email
   from abstracts
-  inner join users on abstracts.user_id = users.id 
-  limit 100`);
+  inner join users on abstracts.user_id = users.id`);
 
   res.json(abstracts.rows);
 });
