@@ -1,12 +1,13 @@
 {
-  "name": "example-app",
+  "name": "web",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite --port 3000",
+    "dev": "vite --port 3000 --open",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview", 
+    "si": "cd .. && spago install -p web"
   },
   "devDependencies": {
     "vite": "^5.2.0"

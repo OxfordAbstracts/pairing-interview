@@ -110,6 +110,7 @@ workspace:
         - halogen-formless
         - halogen-store
         - prelude
+        - remotedata
         - routing
         - routing-duplex
       test_dependencies: []
@@ -191,6 +192,7 @@ workspace:
         - random
         - record
         - refs
+        - remotedata
         - routing
         - routing-duplex
         - safe-coerce
@@ -1893,6 +1895,19 @@ packages:
     dependencies:
       - effect
       - prelude
+  remotedata:
+    type: registry
+    version: 5.0.1
+    integrity: sha256-walmE3/UPfXxuGjQTkL47ZOdp8yKoRY+lOAaAqYaMFQ=
+    dependencies:
+      - bifunctors
+      - effect
+      - either
+      - foldable-traversable
+      - maybe
+      - prelude
+      - profunctor-lenses
+      - transformers
   routing:
     type: registry
     version: 11.0.0

@@ -13,6 +13,7 @@ package:
     - halogen-formless
     - halogen-store
     - prelude
+    - remotedata
     - routing
     - routing-duplex
   test:
