@@ -7,12 +7,11 @@ import Server.DB as DB
 import Yoga.Postgres (Query(..))
 import Yoga.Postgres.SqlValue (toSql)
 
-getUsersWithEmail :: String -> Aff (Array { id :: String, email :: String, first_name :: String, last_name :: String, password :: String })
-getUsersWithEmail email = DB.query
+getAbstracts :: Aff (Array { title :: String, category :: String, first_name :: String, last_name :: String, email :: String })
+getAbstracts = DB.query
   ( Query $
-      """
-  SELECT id, email, first_name, last_name, password
-  FROM users
-  WHERE email = $1"""
+      """select title, category, first_name, last_name, email
+  from abstracts
+  inner join users on abstracts.user_id = users.id"""
   )
-  [ toSql email ]
+  []
