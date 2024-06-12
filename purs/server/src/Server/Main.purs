@@ -35,6 +35,7 @@ main =
   router = case _ of
     { method: Options } -> do
       ok' corsHeaders ""
+
     { route: Healthcheck } -> do
       uptime <- liftEffect Process.uptime
       timestamp <- getTimestamp
@@ -43,6 +44,7 @@ main =
     { route: Abstracts } -> do
       abstracts <- getAbstracts
       jsonOk abstracts
+
   addCorsHeaders res@{ headers } =
     res { headers = headers <> corsHeaders }
 
