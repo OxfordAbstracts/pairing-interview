@@ -1,8 +1,10 @@
 import "dotenv/config";
 import express from "express";
 import db from "./db.mjs";
+import cors from 'cors';
 
 const app = express();
+app.use(cors());
 const port = 3000;
 
 app.get("/healthcheck", async (_req, res) => {
