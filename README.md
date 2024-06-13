@@ -28,14 +28,13 @@ Don't worry if you do not complete all of the requirements. We would prefer that
 
 ## Requirements
 
-1. Show a basic table. It should display the first 100 abstracts with the headers: Title, Category, Submitter name, submitter email and when the abstract was created.
+1. Show a basic table. It should display the first 100 abstracts with the headers: Title, Category, Submitter name, Submitter email and when the abstract was created.
 2. Add sorting to the table. When clicking on a header it should be possible to sort the rows based on that column, both ascending and descending.
 3. Add a search to the table. When the user types in the search input, the rows should be filtered based on whether they contain the text in the search input.
-4. When a user clicks on a row, open a sidebar or modal that displays the authors and body of the abstract.
-5. Add paging to the table. 
 
 ## Stretch Goals
 
-1. Add the ability to edit the category from the table.
-2. Add virtual scrolling to the table.
-3. Add category filtering.
+1. When a user clicks on a row, open a sidebar or modal that displays the authors and body of the abstract.
+2. Add paging to the table. 
+3. Add virtual scrolling to the table.
+
