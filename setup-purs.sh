@@ -3,7 +3,10 @@
 # Install pnpm globally
 npm install -g pnpm@9.0.2
 
+npm install -g purescript@0.15
+
 npm install -g spago@next
+
 
 cd node
 

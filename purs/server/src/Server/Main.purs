@@ -56,8 +56,6 @@ main =
       , "Access-Control-Allow-Headers" /\ "Content-Type,Authorization"
       ]
 
-type User = { email :: String, id :: String, first_name :: String, last_name :: String }
-
 jsonOk :: forall a. EncodeJson a => a -> Aff Response
 jsonOk = ok' jsonHeaders <<< toJson
 

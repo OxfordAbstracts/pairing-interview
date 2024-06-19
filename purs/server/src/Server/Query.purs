@@ -7,7 +7,16 @@ import Server.DB as DB
 import Yoga.Postgres (Query(..))
 import Yoga.Postgres.SqlValue (toSql)
 
-getAbstracts :: Aff (Array { title :: String, category :: String, first_name :: String, last_name :: String, email :: String })
+getAbstracts
+  :: Aff
+       ( Array
+           { title :: String
+           , category :: String
+           , first_name :: String
+           , last_name :: String
+           , email :: String
+           }
+       )
 getAbstracts = DB.query
   ( Query $
       """select title, category, first_name, last_name, email

@@ -14,7 +14,6 @@ import Effect.Class (liftEffect)
 import Foreign (Foreign, unsafeFromForeign)
 import Yoga.Postgres (Pool, Query, connectionInfoFromString, withClient)
 import Yoga.Postgres as Postgres
-import Yoga.Postgres.SqlValue (SqlValue)
 
 mkPool :: Effect Pool
 mkPool = Postgres.mkPool (connectionInfoFromString "postgres://postgres:postgrespassword@localhost:5432/postgres")
