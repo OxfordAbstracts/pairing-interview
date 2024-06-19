@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon entry.mjs --watch src ../output",
+    "dev": "nodemon --watch ../output entry.mjs ",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
