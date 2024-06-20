@@ -1,8 +1,8 @@
 import "dotenv/config";
-import { abstracts, authors, users } from './fixture.mjs';
+import { abstracts, authors, users } from "./fixture.mjs";
 import pg from "pg";
 
-console.log('seeding DB')
+console.log("seeding DB");
 
 const pool = new pg.Pool();
 
@@ -43,13 +43,12 @@ truncate table users cascade;
 
 await pool.query(truncateTablesSql);
 
-
 const insertUsersSql = `INSERT INTO users 
 (id, created_at, first_name, last_name, email, password) 
 VALUES ${users
   .map(
     (user) =>
-      `(E'${user.id}', E'${user.created_at}', E'${user.first_name}', E'${user.last_name}', E'${user.email}', E'${user.password}')`
+      `(E'${user.id}', E'${user.created_at}', E'${user.first_name}', E'${user.last_name}', E'${user.email}', E'${user.password}')`,
   )
   .join(", ")}`;
 
@@ -58,7 +57,7 @@ const insertAbstractsSql = `INSERT INTO abstracts
 VALUES ${abstracts
   .map(
     (abstract) =>
-      `(E'${abstract.id}', E'${abstract.created_at}', E'${abstract.title}', E'${abstract.category}', E'${abstract.body}', E'${abstract.user_id}')`
+      `(E'${abstract.id}', E'${abstract.created_at}', E'${abstract.title}', E'${abstract.category}', E'${abstract.body}', E'${abstract.user_id}')`,
   )
   .join(", ")}`;
 
@@ -67,7 +66,7 @@ const insertAuthorsSql = `INSERT INTO authors
 VALUES ${authors
   .map(
     (author) =>
-      `(E'${author.id}', E'${author.created_at}', E'${author.user_id}', E'${author.abstract_id}', E'${author.institution}')`
+      `(E'${author.id}', E'${author.created_at}', E'${author.user_id}', E'${author.abstract_id}', E'${author.institution}')`,
   )
   .join(", ")}`;
 
@@ -75,6 +74,6 @@ await pool.query(insertUsersSql);
 await pool.query(insertAbstractsSql);
 await pool.query(insertAuthorsSql);
 
-console.log('DB seeded successfully')
+console.log("DB seeded successfully");
 
 process.exit(0);

@@ -1,4 +1,4 @@
 packages:
-  - 'web'
-  - 'server'
-  - 'seed'
+  - "web"
+  - "server"
+  - "seed"

@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import db from "./db.mjs";
-import cors from 'cors';
+import cors from "cors";
 
 const app = express();
 app.use(cors());

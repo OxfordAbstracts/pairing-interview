@@ -20,7 +20,12 @@ export const abstracts = _.range(10000).map(() => ({
   id: faker.string.uuid(),
   created_at: past(),
   title: faker.lorem.sentence(),
-  category: faker.helpers.arrayElement(['science', 'technology', 'engineering', 'mathematics']), 
+  category: faker.helpers.arrayElement([
+    "science",
+    "technology",
+    "engineering",
+    "mathematics",
+  ]),
   body: faker.lorem.paragraphs(),
   user_id: faker.helpers.arrayElement(users).id,
 }));

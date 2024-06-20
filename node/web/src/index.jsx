@@ -3,7 +3,4 @@ import { createRoot } from "react-dom/client";
 import "./index.css";
 import Table from "./Table";
 
-
-createRoot(document.getElementById("root")).render(
-  <Table  />
-);
+createRoot(document.getElementById("root")).render(<Table />);

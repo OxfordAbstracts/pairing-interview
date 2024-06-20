@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
 const Table = () => {
   const [abstracts, setAbstracts] = useState([]);
@@ -9,11 +9,11 @@ const Table = () => {
 
   const fetchAbstracts = async () => {
     try {
-      const response = await fetch('http://localhost:3000/abstracts');
+      const response = await fetch("http://localhost:3000/abstracts");
       const data = await response.json();
       setAbstracts(data);
     } catch (error) {
-      console.error('Error fetching abstracts:', error);
+      console.error("Error fetching abstracts:", error);
     }
   };
 
