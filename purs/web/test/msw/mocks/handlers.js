@@ -1,5 +1,5 @@
 import { http, HttpResponse } from "msw";
-import { abstracts, users } from "../../../../../node/seed/fixture";
+import { abstracts, users } from "../../../../../js/seed/fixture";
 
 const usersById = Object.fromEntries(users.map((user) => [user.id, user]));
 
