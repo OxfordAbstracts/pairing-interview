@@ -26,6 +26,13 @@ If there are any requirements that need clarification or you are unsure of anyth
 
 Don't worry if you do not complete all of the requirements. We would prefer that you don't rush.
 
+## Testing
+There are some tests using Vitest (like Jest) and Testing Library for requirements 1 and 2 below.
+You can run `pnpm test` in a separate terminal to continually run the tests while working on the implementation.
+
+3 has no test, but there is a TODO in the test file if you feel comfortable adding one.
+It is possible to do this in a TDD fashion if that's how you prefer to work.
+
 ## Requirements
 
 1. Show a basic table. It should display the first 100 abstracts with the headers: Title, Category, Submitter name, Submitter email and when the abstract ID.
