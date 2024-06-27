@@ -35,7 +35,7 @@ It is possible to do this in a TDD fashion if that's how you prefer to work.
 
 ## Requirements
 
-1. Show a basic table. It should display the first 100 abstracts with the headers: Title, Category, Submitter name, Submitter email and when the abstract ID.
+1. Show a basic table. It should display the first 100 abstracts with the headers: Title, Category, Submitter name, Submitter email and the abstract ID.
 2. Add sorting to the table. When clicking on a header it should be possible to sort the rows based on that column, both ascending and descending.
 3. Add a search to the table. When the user types in the search input, the rows should be filtered based on whether they contain the text in the search input.
 
