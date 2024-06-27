@@ -23,14 +23,6 @@ data SortCol = Id | Title | Category | SubmitterName | SubmitterEmail
 data SortOrd = Asc | Desc
 data SortConf = SortConf SortCol SortOrd
 
-sortVal :: SortCol -> Abstract -> String
-sortVal col = case col of
-  Id -> _.id
-  Title -> _.title
-  Category -> _.category
-  SubmitterName -> \abs -> intercalate " " [ abs.first_name, abs.last_name ]
-  SubmitterEmail -> _.email
-
 derive instance Eq SortCol
 derive instance Eq SortOrd
 
@@ -45,8 +37,7 @@ type State =
   { abstracts :: RemoteData String (Array Abstract), sortBy :: Maybe SortConf }
 
 type Abstract =
-  { id :: String
-  , title :: String
+  { title :: String
   , category :: String
   , first_name :: String
   , last_name :: String
@@ -108,20 +99,12 @@ component =
             Failure err -> [ HH.text err ]
             Success abstracts ->
               let
-                sortFunc = case state.sortBy of
-                  Just (SortConf col Asc) -> sortWith (sortVal col)
-                  Just (SortConf col Desc) -> reverse <<< sortWith (sortVal col)
-                  _ -> identity
+                sortFunc = identity
               in
                 abstracts # sortFunc # take 100 <#> \abstract ->
                   HH.tr []
-                    [ HH.td [ css "border px-4 py-2" ] [ HH.text abstract.id ]
-                    , HH.td [ css "border px-4 py-2" ] [ HH.text abstract.title ]
+                    [ HH.td [ css "border px-4 py-2" ] [ HH.text abstract.title ]
                     , HH.td [ css "border px-4 py-2" ] [ HH.text abstract.category ]
-                    , HH.td [ css "border px-4 py-2" ]
-                        [ HH.text $ intercalate " " [ abstract.first_name, abstract.last_name ]
-                        ]
-                    , HH.td [ css "border px-4 py-2" ] [ HH.text abstract.email ]
                     ]
       ]
 
@@ -140,12 +123,7 @@ component =
     Receive input ->
       pure unit
 
-    SortBy sortCol -> H.modify_ \st -> st
-      { sortBy = case st.sortBy of
-          Just (SortConf sc Asc) | sc == sortCol -> Just $ SortConf sortCol Desc
-          Just (SortConf sc Desc) | sc == sortCol -> Nothing
-          _ -> Just $ SortConf sortCol Asc
-      }
+    SortBy sortCol -> pure unit
 
   toJson :: Foreign -> Json
   toJson = unsafeCoerce
